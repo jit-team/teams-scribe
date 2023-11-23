@@ -1,3 +1,6 @@
+using Azure;
+using Azure.AI.OpenAI;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add service defaults & Aspire components.
@@ -5,35 +8,36 @@ builder.AddServiceDefaults();
 
 // Add services to the container.
 builder.Services.AddProblemDetails();
-
+var keySecret = builder.Configuration.GetValue<string>("AzOpenAi:Key");
+var proxyUrlSecret = builder.Configuration.GetValue<string>("AzOpenAi:Url");
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseExceptionHandler();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+var proxyUrl = new Uri(proxyUrlSecret + "/v1/api");
 
-app.MapGet("/weatherforecast", () =>
+var token = new AzureKeyCredential(keySecret + "/JakuSw");
+
+var openAIClient = new OpenAIClient(proxyUrl, token);
+
+app.MapGet("/test", async () =>
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
+    ChatCompletionsOptions completionOptions = new()
+    {
+        MaxTokens = 2048,
+        Temperature = 0.7f,
+        NucleusSamplingFactor = 0.95f,
+        DeploymentName = "gpt-35-turbo"
+    };
+
+    completionOptions.Messages.Add(new ChatMessage(ChatRole.System, "you are a helpful tax accountant and want to lower everybody's taxes."));
+    completionOptions.Messages.Add(new ChatMessage(ChatRole.User, "hi there"));
+    var response = await openAIClient.GetChatCompletionsAsync(completionOptions);
+
+    return Results.Ok(response.Value.Choices);
 });
 
 app.MapDefaultEndpoints();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
