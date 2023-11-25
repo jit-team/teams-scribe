@@ -12,7 +12,7 @@ public static class TranscriptEndpoint
 
     private static RouteGroupBuilder AddEndpoints(this RouteGroupBuilder group)
     {
-        group.MapPost("/", async (TranscriptDto dto, IAiClient aiClient) =>
+        group.MapPost("/", async (TranscriptDto dto, IAiClient aiClient, ILogger<Program> logger) =>
         {
             var result = await aiClient.GetMeetingMinutesAsync(dto.transcript);
             return Results.Ok(result);

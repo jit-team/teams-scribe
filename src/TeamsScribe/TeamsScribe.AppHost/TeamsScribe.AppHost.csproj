@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TeamsScribe.ApiService\TeamsScribe.ApiService.csproj" />
+    <ProjectReference Include="..\TeamsScribe.Web\TeamsScribe.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>

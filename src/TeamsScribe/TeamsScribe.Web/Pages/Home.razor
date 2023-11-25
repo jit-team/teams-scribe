@@ -1,0 +1,39 @@
+﻿@page "/"
+@using System.Net.Http
+@using System.Net.Http.Json
+@inject HttpClient Http
+
+<PageTitle>Generate meeting minutes</PageTitle>
+
+<h1>Get your meeting minutes from transcript!</h1>
+
+
+
+<input @bind="transcript" placeholder="Transcript" />
+<button @onclick="Generate">Generate</button>
+
+@if (content.Any())
+{
+    @foreach (var line in content)
+    {
+        @if (!string.IsNullOrEmpty(line))
+        {
+            <p>@line</p> <br />
+        }
+    }
+}
+
+@code {
+    private string? transcript;
+    private List<string> content = new();
+
+    private async Task Generate()
+    {
+        var text = new TranscriptDto(transcript!);
+        var response = await Http.PostAsJsonAsync("transcript", text);
+        var result = await response.Content.ReadFromJsonAsync<string>();
+        content = result!.Split(new string[] { Environment.NewLine }, StringSplitOptions.None).ToList();
+    }
+
+    public record TranscriptDto(string transcript);
+}
