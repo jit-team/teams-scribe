@@ -30,7 +30,7 @@ public class ChangeNotificationSubscriber
         var section = _configuration.GetSection("Graph");
 
         var clientState = section["SecretClientState"];
-        var encryptionCertificate = section["EncryptionCertificate"];
+        var encryptionCertificate = section["EncryptionCertificatePublic"];
         var encryptionCertificateId = section["EncryptionCertificateId"];
 
         _logger.LogInformation("Hostname: {hostName}", hostName);

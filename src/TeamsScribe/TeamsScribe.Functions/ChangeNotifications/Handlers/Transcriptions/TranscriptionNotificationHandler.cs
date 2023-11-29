@@ -10,14 +10,17 @@ public class TranscriptionNotificationHandler
 {
     private readonly GraphServiceClient _graphClient;
     private readonly IConfiguration _configuration;
+    private readonly HttpClient _httpClient;
     private readonly BlobContainerClient _blobContainerClient;
 
     public TranscriptionNotificationHandler(GraphServiceClient graphClient,
         IConfiguration configuration,
+        IHttpClientFactory httpClientFactory,
         IAzureClientFactory<BlobServiceClient> blobClientFactory)
     {
         _graphClient = graphClient;
         _configuration = configuration;
+        _httpClient = httpClientFactory.CreateClient("TeamsScribeApi");
         _blobContainerClient = blobClientFactory.CreateClient("teamsScribeBlob").GetBlobContainerClient("transcripts");
         _blobContainerClient.CreateIfNotExists();
     }
