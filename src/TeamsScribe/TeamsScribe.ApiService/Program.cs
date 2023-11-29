@@ -1,3 +1,4 @@
+using TeamsScribe.ApiService;
 using TeamsScribe.ApiService.Clients.AzureOpenAI;
 using TeamsScribe.ApiService.Clients.Config;
 using TeamsScribe.ApiService.Endpoints;
@@ -35,11 +36,16 @@ builder.Services.AddSwaggerGen(c =>
 });
 // Add dependency injection for IAiClient and AiClient.
 builder.Services.AddTransient<IAiClient, AiClient>();
+builder.Services.AddTransient<BlobClient>();
+builder.Services.AddTransient<MeetingMinutesDistributionClient>();
 builder.Services.AddCors();
 // Add services to the container.
 builder.Services.AddProblemDetails();
 
 builder.Services.Configure<AzureOpenAiSettings>(builder.Configuration.GetSection(AzureOpenAiSettings.SectionName));
+builder.Services.Configure<CommunicationServicesSettings>(builder.Configuration.GetSection(CommunicationServicesSettings.SectionName));
+builder.Services.Configure<AzureBlobStorageSettings>(builder.Configuration.GetSection(AzureBlobStorageSettings.SectionName));
+
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 builder.Services.AddCors(options =>
 {

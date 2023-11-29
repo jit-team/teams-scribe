@@ -17,6 +17,20 @@ public static class TranscriptEndpoint
             var result = await aiClient.GetMeetingMinutesAsync(dto.transcript);
             return Results.Ok(result);
         });
+
+        group.MapPost("/meeting", async (
+            MeetingMinutesDistributionClient distributionClient,
+            MeetingTranscriptDto meeting,
+            BlobClient blobClient,
+            IAiClient aiClient
+            ) => 
+            {
+                var transcript = await blobClient.FetchTranscript(meeting.TranscriptionBlob);
+                var meetingMinutes = await aiClient.GetMeetingMinutesAsync(transcript);
+                var meetingMinutesPayload = new MeetingMinutesEmailPayload(meeting.Organizer, meeting.Participants, meeting.Title, meetingMinutes);
+                await distributionClient.SendAsync(meetingMinutesPayload);
+            });
+        
         return group;
     }
 }
