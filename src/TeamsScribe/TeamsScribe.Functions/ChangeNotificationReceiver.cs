@@ -2,6 +2,7 @@ using System.Net;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization.Metadata;
+using System.Web;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
@@ -48,7 +49,7 @@ public class ChangeNotificationReceiver
 
         var response = req.CreateResponse(HttpStatusCode.OK);
         response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
-        response.WriteString(validationToken);
+        response.WriteString(HttpUtility.UrlDecode(validationToken));
 
         _logger.LogInformation("Responding to a subscription validation request");
 
