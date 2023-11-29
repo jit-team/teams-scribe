@@ -9,7 +9,10 @@
             "enableLiveMetricsFilters": true
         },
         "logLevel": {
-            "TeamsScribe.Functions": "Information"
+            "default": "Information",
+            "Host": "Error",
+            "Function": "Information",
+            "Host.Aggregator": "Information"
         }
     }
 }
