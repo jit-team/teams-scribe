@@ -28,6 +28,8 @@ public class ChangeNotificationReceiver
     [Function("ChangeNotificationReceiver")]
     public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestData req)
     {
+        _logger.LogInformation(JsonSerializer.Serialize(req.Query));
+
         ArgumentNullException.ThrowIfNull(req);
 
         if (req.Query["validationToken"] is not null)

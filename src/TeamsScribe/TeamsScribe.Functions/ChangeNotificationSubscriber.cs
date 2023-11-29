@@ -31,16 +31,14 @@ public class ChangeNotificationSubscriber
 
         var clientState = section["SecretClientState"];
         var encryptionCertificate = section["EncryptionCertificatePublic"];
-        var encryptionCertificateId = section["EncryptionCertificateId"];
-
-        _logger.LogInformation("Hostname: {hostName}", hostName);
+        var encryptionCertificateId = section["EncryptionCertificateId"];        
 
         var newSubscription = new Subscription
         {
             ChangeType = ChangeType.Created.ToString(),
             NotificationUrl = $"https://{hostName}/api/ChangeNotificationReceiver",
             Resource = "communications/onlineMeetings/getAllRecordings",
-            IncludeResourceData = false,
+            IncludeResourceData = true,
             EncryptionCertificate = encryptionCertificate,
             EncryptionCertificateId = encryptionCertificateId,
             ExpirationDateTime = DateTime.UtcNow.AddHours(1),

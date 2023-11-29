@@ -23,9 +23,9 @@ var host = new HostBuilder()
 
         services.AddHttpClient("TeamsScribeApi", httpClient => 
         {
-            httpClient.BaseAddress = new Uri(hostContext.Configuration.GetSection("TeamsScript")["ApiUrl"]);
+            httpClient.BaseAddress = new Uri(hostContext.Configuration.GetSection("TeamsScribe")["ApiUrl"]);
             
-            var apiKey = hostContext.Configuration.GetSection("TeamsScript")["ApiKey"];
+            var apiKey = hostContext.Configuration.GetSection("TeamsScribe")["ApiKey"];
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("ApiKey", apiKey);
         });
     })
