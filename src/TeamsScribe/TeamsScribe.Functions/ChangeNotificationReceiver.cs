@@ -14,14 +14,14 @@ using TeamsScribe.Functions.ChangeNotifications.Handlers.Transcriptions;
 namespace TeamsScribe.Functions;
 
 public class ChangeNotificationReceiver
-{    
+{
     private readonly TranscriptionNotificationHandler _transcriptionNotificationHandler;
     private readonly ILogger _logger;
 
     public ChangeNotificationReceiver(
         TranscriptionNotificationHandler transcriptionNotificationHandler,
         ILoggerFactory loggerFactory)
-    {        
+    {
         _transcriptionNotificationHandler = transcriptionNotificationHandler;
         _logger = loggerFactory.CreateLogger<ChangeNotificationReceiver>();
     }
@@ -29,8 +29,6 @@ public class ChangeNotificationReceiver
     [Function("ChangeNotificationReceiver")]
     public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestData req)
     {
-        _logger.LogInformation(JsonSerializer.Serialize(req.Query));
-
         ArgumentNullException.ThrowIfNull(req);
 
         if (req.Query["validationToken"] is not null)
@@ -43,27 +41,27 @@ public class ChangeNotificationReceiver
 
     private HttpResponseData ValidateSubscription(HttpRequestData req)
     {
-        var validationToken = req.Query["validationToken"]?.ToString();
+        var validationToken = HttpUtility.UrlDecode(req.Query["validationToken"]?.ToString());
 
         ArgumentNullException.ThrowIfNull(validationToken);
 
         var response = req.CreateResponse(HttpStatusCode.OK);
         response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
-        response.WriteString(HttpUtility.UrlDecode(validationToken));
+        response.WriteString(validationToken);
 
-        _logger.LogInformation("Responding to a subscription validation request");
+        _logger.LogInformation("Responding to a subscription validation request. Validation token: {validationToken}", validationToken);
 
         return response;
     }
 
     private async Task<HttpResponseData> ProcessChangeNotification(HttpRequestData req)
-    {        
+    {
         _logger.LogInformation("Received change notifications from Graph subscription");
         var clientState = Environment.GetEnvironmentVariable("Graph:SecretClientState");
 
         using var reader = new StreamReader(req.Body);
-        var requestBody = await reader.ReadToEndAsync();        
-        
+        var requestBody = await reader.ReadToEndAsync();
+
         using var document = JsonDocument.Parse(requestBody);
         var jsonParseNode = new JsonParseNode(document.RootElement);
         var collectionResponse = jsonParseNode.GetObjectValue(ChangeNotificationCollectionResponse.CreateFromDiscriminatorValue);

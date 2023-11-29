@@ -37,7 +37,7 @@ public class ChangeNotificationSubscriber
         {
             ChangeType = ChangeType.Created.ToString(),
             NotificationUrl = $"https://{hostName}/api/ChangeNotificationReceiver",
-            Resource = "communications/onlineMeetings/getAllRecordings",
+            Resource = "communications/onlineMeetings/getAllTranscripts",
             IncludeResourceData = true,
             EncryptionCertificate = encryptionCertificate,
             EncryptionCertificateId = encryptionCertificateId,
