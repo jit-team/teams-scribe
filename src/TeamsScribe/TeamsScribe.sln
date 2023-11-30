@@ -10,8 +10,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamsScribe.ApiService", "T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamsScribe.Web", "TeamsScribe.Web\TeamsScribe.Web.csproj", "{5A016B70-F197-4D2D-8379-F369F2506E8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamsScribe.Functions", "TeamsScribe.Functions\TeamsScribe.Functions.csproj", "{126F1041-75F1-4F38-BE5F-37B4F047EC42}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,10 +36,6 @@ Global
 		{5A016B70-F197-4D2D-8379-F369F2506E8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A016B70-F197-4D2D-8379-F369F2506E8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A016B70-F197-4D2D-8379-F369F2506E8F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{126F1041-75F1-4F38-BE5F-37B4F047EC42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{126F1041-75F1-4F38-BE5F-37B4F047EC42}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{126F1041-75F1-4F38-BE5F-37B4F047EC42}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{126F1041-75F1-4F38-BE5F-37B4F047EC42}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
