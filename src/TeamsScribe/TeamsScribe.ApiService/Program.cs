@@ -85,7 +85,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.WithOrigins("http://localhost:5220")
+                          policy.WithOrigins("http://localhost:5220", "https://web-teams-scribe.azurewebsites.net")
                             .WithMethods(HttpMethod.Post.ToString())
                             .AllowAnyHeader();
                       });
