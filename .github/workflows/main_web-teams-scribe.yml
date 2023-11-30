@@ -24,12 +24,15 @@ jobs:
 
       - name: Build with dotnet
         run: dotnet build --configuration Release
+        working-directory: ./src/TeamsScribe/TeamsScribe.ApiService
 
       - name: dotnet publish
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        working-directory: ./src/TeamsScribe/TeamsScribe.ApiService
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
+        working-directory: ./src/TeamsScribe/TeamsScribe.ApiService
         with:
           name: .net-app
           path: ${{env.DOTNET_ROOT}}/myapp
