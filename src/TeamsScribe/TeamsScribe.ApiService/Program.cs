@@ -8,7 +8,8 @@ using TeamsScribe.ApiService.Endpoints;
 using TeamsScribe.ApiService.Meetings;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 // Add service defaults & Aspire components.
 builder.AddServiceDefaults();
 builder.Services.AddEndpointsApiExplorer();
@@ -77,8 +78,8 @@ builder.Services.AddScoped((sp) =>
             return new GraphServiceClient(clientSecretCredential, scopes);
         });
 
-builder.Services.AddScoped<MeetingFinder>();    
-builder.Services.AddScoped<MeetingTranscriptionDownloader>();    
+builder.Services.AddScoped<MeetingFinder>();
+builder.Services.AddScoped<MeetingTranscriptionDownloader>();
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 builder.Services.AddCors(options =>
