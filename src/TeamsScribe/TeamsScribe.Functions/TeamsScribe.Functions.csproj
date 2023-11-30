@@ -30,8 +30,4 @@
   <ItemGroup>
     <Using Include="System.Threading.ExecutionContext" Alias="ExecutionContext" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ChangeNotifications/Handlers/" />
-    <Folder Include="ChangeNotifications/Handlers/Transcriptions/" />
-  </ItemGroup>
 </Project>

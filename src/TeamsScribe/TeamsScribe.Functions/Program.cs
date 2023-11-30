@@ -14,7 +14,7 @@ var host = new HostBuilder()
         services.ConfigureFunctionsApplicationInsights();
 
         services.AddGraphClient();
-        services.AddScoped<TranscriptionNotificationHandler>();        
+        services.AddScoped<MeetingTranscriptionDownloader>();        
 
         services.AddAzureClients(clientBuilder =>
         {
