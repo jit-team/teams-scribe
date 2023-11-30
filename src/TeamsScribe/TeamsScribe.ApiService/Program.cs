@@ -5,6 +5,7 @@ using TeamsScribe.ApiService;
 using TeamsScribe.ApiService.Clients.AzureOpenAI;
 using TeamsScribe.ApiService.Clients.Config;
 using TeamsScribe.ApiService.Endpoints;
+using TeamsScribe.ApiService.Meetings;
 
 var builder = WebApplication.CreateBuilder(args);
 

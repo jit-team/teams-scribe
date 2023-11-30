@@ -9,7 +9,13 @@ public class BlobClient
 
     public BlobClient(IOptions<AzureBlobStorageSettings> settings)
     {
-        _client = new BlobServiceClient(settings.Value.ConnectionString).GetBlobContainerClient(settings.Value.Container); 
+        _client = new BlobServiceClient(settings.Value.ConnectionString).GetBlobContainerClient(settings.Value.Container);
+        _client.CreateIfNotExists(); 
+    }
+
+    public Task UploadTranscriptAsync(string fileName, Stream transcriptStream)
+    {
+        return _client.UploadBlobAsync(fileName, transcriptStream);
     }
 
     public async Task<string> FetchTranscript(string blobPath, CancellationToken cancellationToken)
