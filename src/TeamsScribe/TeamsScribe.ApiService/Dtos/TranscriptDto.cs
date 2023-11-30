@@ -1,3 +1,3 @@
 namespace TeamsScribe.ApiService.Dtos;
 
-public record TranscriptDto(string transcript);
+public record MeetingSummaryFormDto(string OrganizerEmail, string JoinWebUrl);

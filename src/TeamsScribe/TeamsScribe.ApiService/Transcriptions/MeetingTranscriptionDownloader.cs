@@ -4,22 +4,19 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
 
-namespace TeamsScribe.Functions.ChangeNotifications.Handlers.Transcriptions;
+namespace TeamsScribe.ApiService;
 
 public class MeetingTranscriptionDownloader
 {
-    private readonly GraphServiceClient _graphClient;    
-    private readonly HttpClient _httpClient;
-    private readonly BlobContainerClient _blobContainerClient;
+    private readonly GraphServiceClient _graphClient;
+    private readonly BlobClient _blobClient;
 
-    public MeetingTranscriptionDownloader(GraphServiceClient graphClient,        
-        IHttpClientFactory httpClientFactory,
-        IAzureClientFactory<BlobServiceClient> blobClientFactory)
+    public MeetingTranscriptionDownloader(
+        GraphServiceClient graphClient,
+        BlobClient blobClient)
     {
-        _graphClient = graphClient;        
-        _httpClient = httpClientFactory.CreateClient("TeamsScribeApi");
-        _blobContainerClient = blobClientFactory.CreateClient("teamsScribeBlob").GetBlobContainerClient("transcripts");
-        _blobContainerClient.CreateIfNotExists();
+        _graphClient = graphClient;
+        _blobClient = blobClient;
     }
 
     public async Task DownloadAsync(string organizerEmail, string joinWebUrl)
@@ -32,7 +29,7 @@ public class MeetingTranscriptionDownloader
         foreach (var transcript in transcripts.Value)
         {
             var contentUrl = $"{transcript.TranscriptContentUrl}?$format=text/vtt";
-            
+
             //
             //
             //
@@ -47,7 +44,7 @@ public class MeetingTranscriptionDownloader
         return user;
     }
 
-    private async Task<OnlineMeeting?> GetOnlineMeeting(User organizer, string joinWebUrl)
+    private async Task<OnlineMeeting> GetOnlineMeeting(User organizer, string joinWebUrl)
     {
         var meetings = await _graphClient.Users[organizer?.Id].OnlineMeetings
             .GetAsync(r =>

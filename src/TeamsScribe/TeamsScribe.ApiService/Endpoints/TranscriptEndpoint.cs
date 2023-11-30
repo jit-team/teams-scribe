@@ -7,15 +7,15 @@ public static class TranscriptEndpoint
 {
     public static void Map(this WebApplication app)
     {
-        app.MapGroup("/transcript").AddEndpoints().WithOpenApi();
+        app.MapGroup("/meeting-summaries").AddEndpoints().WithOpenApi();
     }
 
     private static RouteGroupBuilder AddEndpoints(this RouteGroupBuilder group)
     {
-        group.MapPost("/", async (TranscriptDto dto, IAiClient aiClient) =>
+        group.MapPost("/", async (MeetingSummaryFormDto dto, MeetingTranscriptionDownloader transcriptionDownloader) =>
         {
-            var result = await aiClient.GetMeetingMinutesAsync(dto.transcript);
-            return Results.Ok(result);
+            await transcriptionDownloader.DownloadAsync(dto.OrganizerEmail, dto.JoinWebUrl);
+            return Results.Accepted();
         });
 
         group.MapPost("/meeting", async (

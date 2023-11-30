@@ -1,3 +1,6 @@
+using Azure.Identity;
+using Microsoft.Graph;
+using Microsoft.OpenApi.Models;
 using TeamsScribe.ApiService;
 using TeamsScribe.ApiService.Clients.AzureOpenAI;
 using TeamsScribe.ApiService.Clients.Config;
@@ -34,11 +37,13 @@ builder.Services.AddSwaggerGen(c =>
     };
     c.AddSecurityRequirement(requirement);
 });
+
 // Add dependency injection for IAiClient and AiClient.
 builder.Services.AddTransient<IAiClient, AiClient>();
 builder.Services.AddTransient<BlobClient>();
 builder.Services.AddTransient<MeetingMinutesDistributionClient>();
 builder.Services.AddCors();
+
 // Add services to the container.
 builder.Services.AddProblemDetails();
 
@@ -46,13 +51,37 @@ builder.Services.Configure<AzureOpenAiSettings>(builder.Configuration.GetSection
 builder.Services.Configure<CommunicationServicesSettings>(builder.Configuration.GetSection(CommunicationServicesSettings.SectionName));
 builder.Services.Configure<AzureBlobStorageSettings>(builder.Configuration.GetSection(AzureBlobStorageSettings.SectionName));
 
+// Graph transcript download
+builder.Services.AddScoped((sp) =>
+        {
+            string[] scopes = ["https://graph.microsoft.com/.default"];
+            var section = sp.GetService<IConfiguration>().GetSection("AzureAd");
+
+            var tenantId = section["TenantId"];
+            var clientId = section["ClientId"];
+            var clientSecret = section["ClientSecret"];
+
+            var options = new ClientSecretCredentialOptions
+            {
+                AuthorityHost = AzureAuthorityHosts.AzurePublicCloud,
+            };
+
+            var clientSecretCredential = new ClientSecretCredential(tenantId, clientId, clientSecret, options);
+
+            return new GraphServiceClient(clientSecretCredential, scopes);
+        });
+
+builder.Services.AddScoped<MeetingTranscriptionDownloader>();    
+
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.WithOrigins("http://localhost:5220").AllowAnyMethod().AllowAnyHeader();
+                          policy.WithOrigins("http://localhost:5220")
+                            .WithMethods(HttpMethod.Post.ToString())
+                            .AllowAnyHeader();
                       });
 });
 
@@ -61,17 +90,6 @@ app.UseSwagger();
 app.UseSwaggerUI();
 app.UseExceptionHandler();
 app.UseCors(MyAllowSpecificOrigins);
-app.Use((context, next) =>
-{
-    var apiKey = builder.Configuration.GetValue<string>("ApiKey");
-    var requestApiKey = context.Request.Headers.FirstOrDefault(h => h.Key == "ApiKey");
-    if (apiKey != requestApiKey.Value)
-    {
-        context.Response.StatusCode = 401;
-        return Task.CompletedTask;
-    }
-    return next(context);
-});
 
 TranscriptEndpoint.Map(app);
 
