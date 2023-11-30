@@ -12,9 +12,9 @@ public class BlobClient
         _client = new BlobServiceClient(settings.Value.ConnectionString).GetBlobContainerClient(settings.Value.Container); 
     }
 
-    public async Task<string> FetchTranscript(string blobPath)
+    public async Task<string> FetchTranscript(string blobPath, CancellationToken cancellationToken)
     {
-        var result = await _client.GetBlobClient(blobPath).DownloadContentAsync();
+        var result = await _client.GetBlobClient(blobPath).DownloadContentAsync(cancellationToken);
         return result.Value.Content.ToString();
     }
 }

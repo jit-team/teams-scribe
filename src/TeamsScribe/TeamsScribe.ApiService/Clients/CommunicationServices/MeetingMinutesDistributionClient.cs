@@ -17,7 +17,7 @@ public class MeetingMinutesDistributionClient
         _emailClient = new EmailClient(options.Value!.ConnectionString);
     }
 
-    public async Task SendAsync(MeetingMinutesEmailPayload payload)
+    public async Task SendAsync(MeetingMinutesEmailPayload payload, CancellationToken cancellationToken)
     {
         try
         {
@@ -34,7 +34,7 @@ public class MeetingMinutesDistributionClient
                 content
             );
 
-            var sendingOperation = await _emailClient.SendAsync(Azure.WaitUntil.Completed, message);
+            var sendingOperation = await _emailClient.SendAsync(Azure.WaitUntil.Completed, message, cancellationToken);
 
             if (sendingOperation.Value.Status == EmailSendStatus.Failed)
             {
@@ -42,6 +42,10 @@ public class MeetingMinutesDistributionClient
                 _logger.LogWarning("Failed to send meeting minutes email for \"{MeetintTitle}\" with error: {Error}", payload.Title, errorMessage);
                 await SendErrorAsync(payload, errorMessage);
             }
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch (Exception exception)
         {
@@ -66,7 +70,6 @@ public class MeetingMinutesDistributionClient
                 recipients,
                 content
             );
-
 
             var sendingOperation = await _emailClient.SendAsync(Azure.WaitUntil.Completed, message);
 

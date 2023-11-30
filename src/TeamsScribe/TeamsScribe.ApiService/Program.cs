@@ -42,6 +42,11 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddTransient<IAiClient, AiClient>();
 builder.Services.AddTransient<BlobClient>();
 builder.Services.AddTransient<MeetingMinutesDistributionClient>();
+
+builder.Services.AddSingleton<ScribeBackgroundService>();
+builder.Services.AddHostedService(sp => sp.GetRequiredService<ScribeBackgroundService>());
+builder.Services.AddSingleton<IScribeWorkingQueue>(sp => sp.GetRequiredService<ScribeBackgroundService>());
+
 builder.Services.AddCors();
 
 // Add services to the container.

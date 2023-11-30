@@ -17,7 +17,7 @@ public class AiClient : IAiClient
         _aiClient = new OpenAIClient(proxyUrl, token);
     }
 
-    public async Task<string> GetMeetingMinutesAsync(string transcript)
+    public async Task<string> GetMeetingMinutesAsync(string transcript, CancellationToken cancellationToken)
     {
         ChatCompletionsOptions completionOptions = new()
         {
@@ -29,7 +29,7 @@ public class AiClient : IAiClient
 
         completionOptions.Messages.Add(new ChatMessage(ChatRole.System, TranscriptPrompt.SetupBaseTranscript));
         completionOptions.Messages.Add(new ChatMessage(ChatRole.User, transcript));
-        var response = await _aiClient.GetChatCompletionsAsync(completionOptions);
+        var response = await _aiClient.GetChatCompletionsAsync(completionOptions, cancellationToken);
         return response.Value.Choices[0].Message.Content;
     }
 }
