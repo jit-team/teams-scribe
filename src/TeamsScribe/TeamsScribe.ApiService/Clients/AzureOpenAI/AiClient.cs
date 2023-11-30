@@ -32,6 +32,7 @@ public class AiClient : IAiClient
         completionOptions.Messages.Add(new ChatMessage(ChatRole.Assistant, TranscriptPrompt.SetupExampleTranscriptResponse));
 
         var questionPrompt = string.Format(TranscriptPrompt.TranscriptTemplate,
+            request.Title,
             request.MeetingDate,
             string.IsNullOrEmpty(request.Description) ? "Not provided." : request.Description,
             request.Transcript);

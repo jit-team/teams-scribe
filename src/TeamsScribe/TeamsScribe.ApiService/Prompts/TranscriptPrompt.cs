@@ -3,7 +3,7 @@ public static class TranscriptPrompt
 {
     public const string SetupBaseTranscript = @"
     You are a transcript assistant. User will send you a transcript of conversation between any number of people.
-    Based on given transcript and optional meeting description generate meeting minutes that include agenda from description or evaluated from transcript, meeting minutes that underlines key points from conversation (do not narrate) and next steps if mentioned.
+    Based on given transcript, title and optional meeting description generate meeting minutes that include agenda from description or evaluated from transcript, meeting minutes that underlines key points from conversation (do not narrate) and next steps if mentioned.
     ";
 
     public const string SetupExampleTranscriptQuestion = @"
@@ -26,13 +26,16 @@ public static class TranscriptPrompt
     ";
 
     public const string TranscriptTemplate = @"
-    Meeting Date:
+    Title:
     {0}
 
-    Description:
+    Meeting Date:
     {1}
+
+    Description:
+    {2}
     
     Transcript:
-    {2}
+    {3}
     ";
 }

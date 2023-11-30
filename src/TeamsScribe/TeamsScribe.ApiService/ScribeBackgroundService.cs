@@ -48,7 +48,7 @@ public class ScribeBackgroundService : BackgroundService, IScribeWorkingQueue
     private async Task ProcessAsync(MeetingTranscriptDto meeting, CancellationToken cancellationToken)
     {
         var transcript = await _blobClient.FetchTranscript(meeting.TranscriptionBlob, cancellationToken);
-        var meetingMinutesRequest = new MeetingMinutesRequest(meeting.MeetingDate, meeting.Description, transcript);
+        var meetingMinutesRequest = new MeetingMinutesRequest(meeting.MeetingDate, meeting.Title, meeting.Description, transcript);
         var meetingMinutes = await _aiClient.GetMeetingMinutesAsync(meetingMinutesRequest, cancellationToken);
         var meetingMinutesPayload = new MeetingMinutesEmailPayload(meeting.Organizer, meeting.Participants, meeting.Title, meetingMinutes);
         await _distributionClient.SendAsync(meetingMinutesPayload, cancellationToken);
