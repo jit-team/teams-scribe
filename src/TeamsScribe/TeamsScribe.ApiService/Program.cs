@@ -77,7 +77,7 @@ builder.Services.AddScoped((sp) =>
             return new GraphServiceClient(clientSecretCredential, scopes);
         });
 
-builder.Services.AddScoped<MeetingTranscriptionDownloader>();    
+builder.Services.AddScoped<MeetingTranscriptionDownloader>();
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 builder.Services.AddCors(options =>
@@ -94,6 +94,19 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.Use((context, next) =>
+{
+    var apiKey = builder.Configuration.GetValue<string>("ApiKey");
+    var requestApiKey = context.Request.Headers.FirstOrDefault(h => h.Key == "ApiKey");
+    if (apiKey != requestApiKey.Value)
+    {
+        context.Response.StatusCode = 401;
+        return Task.CompletedTask;
+    }
+    return next(context);
+});
+
 app.UseExceptionHandler();
 app.UseCors(MyAllowSpecificOrigins);
 

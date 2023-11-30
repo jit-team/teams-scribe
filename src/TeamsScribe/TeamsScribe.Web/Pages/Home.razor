@@ -8,32 +8,33 @@
 <h1>Get your meeting minutes from transcript!</h1>
 
 
-
-<input @bind="transcript" placeholder="Transcript" />
+<input @bind="organizerEmail" placeholder="Organizer email" />
+<input @bind="joinWebUrl" placeholder="Join web url" />
+<input @bind="apiKey" type="password" placeholder="API Key" />
 <button @onclick="Generate">Generate</button>
 
-@if (content.Any())
+@if (!string.IsNullOrEmpty(response))
 {
-    @foreach (var line in content)
-    {
-        @if (!string.IsNullOrEmpty(line))
-        {
-            <p>@line</p> <br />
-        }
-    }
+    <p>@response</p>
 }
-
 @code {
-    private string? transcript;
-    private List<string> content = new();
+    private string? organizerEmail;
+    private string? joinWebUrl;
+    private string? response;
+    private string? apiKey;
 
     private async Task Generate()
     {
-        var text = new TranscriptDto(transcript!);
-        var response = await Http.PostAsJsonAsync("transcript", text);
-        var result = await response.Content.ReadFromJsonAsync<string>();
-        content = result!.Split(new string[] { Environment.NewLine }, StringSplitOptions.None).ToList();
+        var requestDto = new RequestDto(organizerEmail, joinWebUrl);
+        Http.DefaultRequestHeaders.Add("ApiKey", apiKey);
+        var apiResponse = await Http.PostAsJsonAsync("api/meeting-summaries", requestDto);
+        if (!apiResponse.IsSuccessStatusCode)
+        {
+            response = "Error, please contact us.";
+        }
+
+        response = "Expect mail with your meeting minutes in few minutes!";
     }
 
-    public record TranscriptDto(string transcript);
+    record RequestDto(string OrganizerEmail, string JoinWebUrl);
 }
