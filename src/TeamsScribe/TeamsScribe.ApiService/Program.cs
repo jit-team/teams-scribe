@@ -16,11 +16,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "AI API", Version = "v1" });
-    c.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+    c.AddSecurityDefinition("apikey", new OpenApiSecurityScheme
     {
-        Description = "ApiKey must appear in header",
+        Description = "apikey must appear in header",
         Type = SecuritySchemeType.ApiKey,
-        Name = "ApiKey",
+        Name = "apikey",
         In = ParameterLocation.Header,
         Scheme = "ApiKeyScheme"
     });
@@ -29,7 +29,7 @@ builder.Services.AddSwaggerGen(c =>
         Reference = new OpenApiReference
         {
             Type = ReferenceType.SecurityScheme,
-            Id = "ApiKey"
+            Id = "apikey"
         },
         In = ParameterLocation.Header
     };
@@ -100,7 +100,7 @@ app.UseSwaggerUI();
 app.Use((context, next) =>
 {
     var apiKey = builder.Configuration.GetValue<string>("ApiKey");
-    var requestApiKey = context.Request.Headers.FirstOrDefault(h => h.Key == "ApiKey");
+    var requestApiKey = context.Request.Headers.FirstOrDefault(h => h.Key == "apikey");
     if (apiKey != requestApiKey.Value)
     {
         context.Response.StatusCode = 401;
