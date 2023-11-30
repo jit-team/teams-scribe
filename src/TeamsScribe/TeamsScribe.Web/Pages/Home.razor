@@ -32,8 +32,11 @@
         {
             response = "Error, please contact us.";
         }
+        else
+        {
+            response = "Expect mail with your meeting minutes in few minutes!";
+        }
 
-        response = "Expect mail with your meeting minutes in few minutes!";
     }
 
     record RequestDto(string OrganizerEmail, string JoinWebUrl);
