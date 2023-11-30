@@ -3,5 +3,5 @@ namespace TeamsScribe.ApiService.Clients.AzureOpenAI;
 
 public interface IAiClient
 {
-    Task<string> GetMeetingMinutesAsync(string transcript, CancellationToken cancellationToken);
+    Task<string> GetMeetingMinutesAsync(MeetingMinutesRequest request, CancellationToken cancellationToken);
 }

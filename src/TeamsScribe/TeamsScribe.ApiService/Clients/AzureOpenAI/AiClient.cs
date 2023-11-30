@@ -17,7 +17,7 @@ public class AiClient : IAiClient
         _aiClient = new OpenAIClient(proxyUrl, token);
     }
 
-    public async Task<string> GetMeetingMinutesAsync(string transcript, CancellationToken cancellationToken)
+    public async Task<string> GetMeetingMinutesAsync(MeetingMinutesRequest request, CancellationToken cancellationToken)
     {
         ChatCompletionsOptions completionOptions = new()
         {
@@ -28,7 +28,15 @@ public class AiClient : IAiClient
         };
 
         completionOptions.Messages.Add(new ChatMessage(ChatRole.System, TranscriptPrompt.SetupBaseTranscript));
-        completionOptions.Messages.Add(new ChatMessage(ChatRole.User, transcript));
+        completionOptions.Messages.Add(new ChatMessage(ChatRole.User, TranscriptPrompt.SetupExampleTranscriptQuestion));
+        completionOptions.Messages.Add(new ChatMessage(ChatRole.Assistant, TranscriptPrompt.SetupExampleTranscriptResponse));
+
+        var questionPrompt = string.Format(TranscriptPrompt.TranscriptTemplate,
+            request.MeetingDate,
+            string.IsNullOrEmpty(request.Description) ? "Not provided." : request.Description,
+            request.Transcript);
+
+        completionOptions.Messages.Add(new ChatMessage(ChatRole.User, questionPrompt));
         var response = await _aiClient.GetChatCompletionsAsync(completionOptions, cancellationToken);
         return response.Value.Choices[0].Message.Content;
     }
