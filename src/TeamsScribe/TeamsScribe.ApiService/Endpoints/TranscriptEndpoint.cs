@@ -1,3 +1,7 @@
+using System.Text.Encodings.Web;
+using System.Web;
+using HtmlAgilityPack;
+using Microsoft.AspNetCore.Mvc.Routing;
 using TeamsScribe.ApiService.Clients.AzureOpenAI;
 using TeamsScribe.ApiService.Dtos;
 using TeamsScribe.ApiService.Meetings;
@@ -8,7 +12,7 @@ public static class TranscriptEndpoint
 {
     public static void Map(this WebApplication app)
     {
-        app.MapGroup("/meeting-summaries").AddEndpoints().WithOpenApi();
+        app.MapGroup("/api/meeting-summaries").AddEndpoints().WithOpenApi();
     }
 
     private static RouteGroupBuilder AddEndpoints(this RouteGroupBuilder group)
@@ -22,7 +26,7 @@ public static class TranscriptEndpoint
             var transcriptionPath = await transcriptionDownloader.DownloadAsync(meeting.Organizer, meeting.OnlineMeeting);
 
             var transcriptDto = FormScribeRequest(meeting, transcriptionPath);
-            queue.Enqueue(transcriptDto);    
+            //queue.Enqueue(transcriptDto);    
 
             return Results.Accepted();
         });
@@ -35,13 +39,17 @@ public static class TranscriptEndpoint
         var organizer = meeting.Organizer;
         var onlineMeeting = meeting.OnlineMeeting;
         var participants = onlineMeeting.Participants.Attendees.Select(a => a.Upn).ToList();
+        
+        var html = new HtmlDocument();
+        html.LoadHtml(HttpUtility.UrlDecode(onlineMeeting.JoinInformation.Content.Replace("data:text/html,", "")));
+        var description = html.DocumentNode.FirstChild.InnerHtml;
 
         return new MeetingTranscriptDto(
             organizer.UserPrincipalName,
             onlineMeeting.StartDateTime.Value, 
             participants,
             onlineMeeting.Subject, 
-            onlineMeeting.Subject, 
+            description, 
             transcriptionPath);
     }
 }

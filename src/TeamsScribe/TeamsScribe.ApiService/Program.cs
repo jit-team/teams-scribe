@@ -77,7 +77,8 @@ builder.Services.AddScoped((sp) =>
             return new GraphServiceClient(clientSecretCredential, scopes);
         });
 
-builder.Services.AddScoped<MeetingTranscriptionDownloader>();
+builder.Services.AddScoped<MeetingFinder>();    
+builder.Services.AddScoped<MeetingTranscriptionDownloader>();    
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 builder.Services.AddCors(options =>

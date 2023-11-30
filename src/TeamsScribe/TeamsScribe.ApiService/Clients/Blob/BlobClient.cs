@@ -13,9 +13,10 @@ public class BlobClient
         _client.CreateIfNotExists(); 
     }
 
-    public Task UploadTranscriptAsync(string fileName, Stream transcriptStream)
+    public async Task UploadTranscriptAsync(string fileName, Stream transcriptStream)
     {
-        return _client.UploadBlobAsync(fileName, transcriptStream);
+        await _client.DeleteBlobIfExistsAsync(fileName);
+        await _client.UploadBlobAsync(fileName, transcriptStream);
     }
 
     public async Task<string> FetchTranscript(string blobPath, CancellationToken cancellationToken)
