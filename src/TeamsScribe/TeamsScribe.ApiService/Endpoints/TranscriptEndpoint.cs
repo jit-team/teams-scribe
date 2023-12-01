@@ -1,8 +1,5 @@
-using System.Text.Encodings.Web;
 using System.Web;
 using HtmlAgilityPack;
-using Microsoft.AspNetCore.Mvc.Routing;
-using TeamsScribe.ApiService.Clients.AzureOpenAI;
 using TeamsScribe.ApiService.Dtos;
 using TeamsScribe.ApiService.Meetings;
 
@@ -26,7 +23,7 @@ public static class TranscriptEndpoint
             var transcriptionPath = await transcriptionDownloader.DownloadAsync(meeting.Organizer, meeting.OnlineMeeting);
 
             var transcriptDto = FormScribeRequest(meeting, transcriptionPath);
-            //queue.Enqueue(transcriptDto);    
+            queue.Enqueue(transcriptDto);    
 
             return Results.Accepted();
         });
