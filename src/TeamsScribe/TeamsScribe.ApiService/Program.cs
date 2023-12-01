@@ -5,6 +5,7 @@ using TeamsScribe.ApiService;
 using TeamsScribe.ApiService.Clients.AzureOpenAI;
 using TeamsScribe.ApiService.Clients.Config;
 using TeamsScribe.ApiService.Endpoints;
+using TeamsScribe.ApiService.Events;
 using TeamsScribe.ApiService.Meetings;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -78,6 +79,7 @@ builder.Services.AddScoped((sp) =>
             return new GraphServiceClient(clientSecretCredential, scopes);
         });
 
+builder.Services.AddScoped<EventFinder>();
 builder.Services.AddScoped<MeetingFinder>();
 builder.Services.AddScoped<MeetingTranscriptionDownloader>();
 
