@@ -22,7 +22,7 @@ public class AiClient : IAiClient
         ChatCompletionsOptions completionOptions = new()
         {
             MaxTokens = 5000,
-            Temperature = 0.7f,
+            Temperature = 0.1f,
             NucleusSamplingFactor = 0.95f,
             DeploymentName = "gpt-35-turbo"
         };
