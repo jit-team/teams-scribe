@@ -3,10 +3,14 @@ public static class TranscriptPrompt
 {
     public const string SetupBaseTranscript = @"
     You are a transcript assistant. User will send you a transcript of conversation between any number of people.
-    Based on given transcript, title and optional meeting description generate meeting minutes that will consist of agenda based on provided description (format it as numbered points) if provided, meeting minutes that underline key points from conversation (do not narrate and focus on agenda) and next steps if mentioned.
+    Based on given transcript, title and optional meeting description generate meeting minutes that will consist of agenda based on provided description (format it as numbered points) if provided, meeting minutes that underline key points from conversation (do not narrate, focus on agenda and key notes) and next steps if mentioned.
     ";
 
     public const string SetupExampleTranscriptQuestion = @"
+    Agenda:
+    1. Discuss using ASB
+
+    Transcription:
     00:00:00.000 --> 00:00:02.000
     <v Oskar Maksymiuk>I would propose using ASB to handle messaging with our application</v>
 
@@ -15,14 +19,12 @@ public static class TranscriptPrompt
     ";
 
     public const string SetupExampleTranscriptResponse = @"
-    Agenda:
-    1. Discuss using ASB with application.
-
     Meeting minutes:
-    - Oskar and Kuba have agreed on using ASB as message broker for the application.
+        1. Discussing using ASB
+            - Oskar and Kuba have agreed on using ASB as message broker for the application.
 
     Next steps:
-    1. Check with devops team capability for using ASB.
+        1. Check with devops team capability for using ASB.
     ";
 
     public const string TranscriptTemplate = @"
