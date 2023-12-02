@@ -4,6 +4,7 @@ Teams-Scribe is an AI based application designed specifically for Microsoft Team
 - generating meeting minutes based on transcriptions from the Teams application
 - automatically sending the generated summary to participants via email.
 
+[Link to app](https://gray-pebble-0fa116603.4.azurestaticapps.net/)
 ## Setup
 
 ### Required env variables for backend
