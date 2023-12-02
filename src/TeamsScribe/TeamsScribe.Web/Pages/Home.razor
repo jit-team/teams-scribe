@@ -26,6 +26,7 @@
     private async Task Generate()
     {
         var requestDto = new RequestDto(organizerEmail, joinWebUrl);
+        Http.DefaultRequestHeaders.Clear();
         Http.DefaultRequestHeaders.Add("apikey", apiKey);
         var apiResponse = await Http.PostAsJsonAsync("api/meeting-summaries", requestDto);
         if (!apiResponse.IsSuccessStatusCode)
@@ -36,7 +37,6 @@
         {
             response = "Expect mail with your meeting minutes in few minutes!";
         }
-        Http.DefaultRequestHeaders.Remove("apikey");
     }
 
     record RequestDto(string OrganizerEmail, string JoinWebUrl);
