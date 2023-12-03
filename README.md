@@ -19,6 +19,8 @@ Teams-Scribe is an AI based application designed specifically for Microsoft Team
 - CI/CD
     - GitHub Actions
 
+![image](https://github.com/jit-team/teams-scribe/assets/37310497/4f7f0fb9-1954-4b30-a1bc-bb270dcf4cc1)
+
 ## Setup
 
 ### Prerequisites
