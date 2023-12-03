@@ -5,7 +5,36 @@ Teams-Scribe is an AI based application designed specifically for Microsoft Team
 - automatically sending the generated summary to participants via email.
 
 [Link to app](https://gray-pebble-0fa116603.4.azurestaticapps.net/)
+
+## Tech stack
+
+- Azure
+    - Azure App Service
+    - Azure Static Web Apps    
+    - Azure Blob Storage
+    - Azure OpenAI
+    - Azure Communication Services
+    - Graph API
+- .NET 8, .NET Aspire, Blazor, ASP.NET Core Minimal API
+- CI/CD
+    - GitHub Actions
+
 ## Setup
+
+### Prerequisites
+
+- Azure subscription (Work or school subscription)
+- Microsoft Teams
+- Microsoft Entra ID App Registration with below configuration
+    - Client secret generated
+    - API permissions (Application permissions to Graph API)
+        - Calendars.Read        
+        - OnlineMeeting.Read.All
+        - OnlineMeetingTranscript.Read.All
+        - User.Read.All
+- Granting application access policy for accessing online meetings with application permissions
+    - Teams PowerShell module
+    - Article to follow: https://learn.microsoft.com/en-us/graph/cloud-communication-online-meeting-application-access-policy
 
 ### Required env variables for backend
 ```
@@ -21,7 +50,7 @@ AzureAd__ClientId //App registration client Id
 
 AzureAd__ClientSecret //App registration client secret
 
-AzureAd__TenantId //App registration tennant Id
+AzureAd__TenantId //App registration tenant Id
 
 BlobStorage__ConnectionString //Azure blob storage connection string
 
